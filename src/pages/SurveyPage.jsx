@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import QuestionCard from "../components/QuestionCard";
 import ProgressBar from "../components/ProgressBar";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function SurveyPage({ data, onComplete }) {
   const [currentQuestionId, setCurrentQuestionId] = useState("1.1");
@@ -62,26 +63,38 @@ export default function SurveyPage({ data, onComplete }) {
   // Find current theme based on question
   const theme = data.find((t) => t.questions.some((q) => q.id === currentQuestionId));
 
-  if (showThemeIntro) {
-    return (
-      <div className="max-w-xl w-full bg-white text-gray-900 rounded-2xl p-8 shadow-lg text-center">
+  return (
+  <AnimatePresence mode="wait">
+    {showThemeIntro ? (
+      <motion.div
+        key="intro"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -20 }}
+        transition={{ duration: 0.4 }}
+        className="max-w-xl w-full bg-white text-gray-900 rounded-2xl p-8 shadow-lg text-center"
+      >
         <h2 className="text-3xl font-bold text-indigo-600 mb-4">{theme.themeName}</h2>
         <p className="text-gray-700 text-lg mb-6">{theme.description}</p>
         <button
           onClick={() => setShowThemeIntro(false)}
           className="bg-linear-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition"
-        >
-          Go to Questions
+        >Go To Questions
         </button>
-      </div>
-    );
-  }
-
-  return (
-    <div className="max-w-xl w-full bg-white text-gray-900 rounded-2xl p-8 shadow-lg">
-      <ProgressBar current={currentIndex + 1} total={totalQuestions} />
-      <QuestionCard theme={theme} question={currentQuestion} onAnswer={handleAnswer} />
-    </div>
-  );
-
-}
+      </motion.div>
+    ) : (
+      <motion.div
+        key="question"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -20 }}
+        transition={{ duration: 0.4 }}
+        className="max-w-xl w-full bg-white text-gray-900 rounded-2xl p-8 shadow-lg"
+      >
+        <ProgressBar current={currentIndex + 1} total={totalQuestions} />
+        <QuestionCard question={currentQuestion} onAnswer={handleAnswer} />
+      </motion.div>
+    )}
+  </AnimatePresence>
+);
+};
