@@ -14,6 +14,17 @@ import { PDFDownloadLink } from "@react-pdf/renderer";
 import ReportDocument from "../components/ReportDocument";
 
 // Helper: Convert overall score to rating label
+function getRatingForReport(overallPercent) {
+  if (overallPercent >= 90) return "★ Money Master";
+  if (overallPercent >= 80) return "✓ Great at Money";
+  if (overallPercent >= 70) return "✓ Good with Money";
+  if (overallPercent >= 60) return "≈ OK with Money";
+  if (overallPercent >= 50) return "– Poor with Money";
+  if (overallPercent >= 40) return "⚠ Needs Help with Money";
+  return "✗ Failing with Money";
+}
+
+
 function getRating(overallPercent) {
   if (overallPercent >= 90) return "💎 Money Master";
   if (overallPercent >= 80) return "🌟 Great at Money";
@@ -28,6 +39,7 @@ export default function ResultsPage({ results, onRestart }) {
   const themes = results && Array.isArray(results.themes) ? results.themes : [];
   const overall = results?.overallPercent ?? 0;
   const rating = getRating(overall);
+  const ratingForReport = getRatingForReport(overall);
 
   if (!themes || themes.length === 0) {
     return (
@@ -109,7 +121,7 @@ export default function ResultsPage({ results, onRestart }) {
       {/* 📄 Download PDF Report */}
       <div className="mt-8">
         <PDFDownloadLink
-          document={<ReportDocument results={{ ...results, rating }} />}
+          document={<ReportDocument results={{ ...results, ratingForReport }} />}
           fileName="MasteringMoneyReport.pdf"
         >
           {({ loading }) => (
