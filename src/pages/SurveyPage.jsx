@@ -2,11 +2,14 @@ import React, { useState } from "react";
 import QuestionCard from "../components/QuestionCard";
 import ProgressBar from "../components/ProgressBar";
 import { motion, AnimatePresence } from "framer-motion";
+import ReasonsPage from "./ReasonsPage"; // ✅ new import
 
 export default function SurveyPage({ data, onComplete }) {
   const [currentQuestionId, setCurrentQuestionId] = useState("1.1");
   const [responses, setResponses] = useState({});
   const [showThemeIntro, setShowThemeIntro] = useState(true);
+  const [showReasons, setShowReasons] = useState(false); // ✅ track reasons step
+  const [surveyResults, setSurveyResults] = useState(null); // ✅ store survey results
 
   const allQuestions = data.flatMap((t) => t.questions);
   const currentQuestion = allQuestions.find((q) => q.id === currentQuestionId);
@@ -25,15 +28,19 @@ export default function SurveyPage({ data, onComplete }) {
     setResponses(updated);
 
     if (next === null || next === "End") {
+      // ✅ After survey ends, show ReasonsPage instead of final results
       const results = calculateResults(updated, data);
-      onComplete(results);
+      setSurveyResults(results);
+      setShowReasons(true);
       return;
     }
 
     // Determine next question and theme transition
     const nextQuestion = allQuestions.find((q) => q.id === next);
     const currentThemeId = theme.themeId;
-    const nextThemeId = data.find((t) => t.questions.some((q) => q.id === nextQuestion.id))?.themeId;
+    const nextThemeId = data.find((t) =>
+      t.questions.some((q) => q.id === nextQuestion.id)
+    )?.themeId;
 
     if (nextThemeId !== currentThemeId) {
       setShowThemeIntro(true);
@@ -73,8 +80,28 @@ export default function SurveyPage({ data, onComplete }) {
     };
   };
 
+  // Find current theme based on question
   const theme = data.find((t) => t.questions.some((q) => q.id === currentQuestionId));
 
+  // ✅ If user has finished survey, show ReasonsPage instead
+  if (showReasons && surveyResults) {
+    return (
+      <ReasonsPage
+        onComplete={(reasonsData) => {
+          const mergedResults = {
+            ...surveyResults,
+            // Spread other helpful fields (reviewed, ranking, aliases)
+            ...(reasonsData || {}),
+            // Ensure the PDF gets the exact shape it expects
+            reasons: reasonsData?.reasons || reasonsData,
+          };
+          onComplete(mergedResults); // ✅ return combined survey + reasons
+        }}
+      />
+    );
+  }
+
+  // Default render: survey questions
   return (
     <AnimatePresence mode="wait">
       {showThemeIntro ? (
