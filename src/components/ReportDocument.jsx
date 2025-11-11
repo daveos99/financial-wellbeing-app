@@ -9,15 +9,9 @@ import {
   Font,
 } from "@react-pdf/renderer";
 
-// Optional custom font
-Font.register({
-  family: "Inter",
-  src: "https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTm4VFw.ttf",
-});
 
 const styles = StyleSheet.create({
   page: {
-    fontFamily: "Inter",
     padding: 32,
     fontSize: 12,
     color: "#111827",
