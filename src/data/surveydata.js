@@ -191,7 +191,7 @@ export const surveyData = [
     questions: [
       {
         id: "5.1",
-        text: "In the last two years have you had any credit cards (e.g. Visa/Mastercard/Amex/Other)?",
+        text: "In the last two years have you had any credit cards (e.g. Visa, Mastercard, Amex, Other)?",
         options: [
           { label: "Yes", value: 0, next: "5.1.1" },
           { label: "No", value: 2, next: "5.2" },
