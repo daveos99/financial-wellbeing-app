@@ -9,6 +9,8 @@ import {
   Font,
 } from "@react-pdf/renderer";
 import DejaVuSans from "../assets/fonts/DejaVuSans.ttf";
+import { VERSION_LABEL } from "../config/version";
+import { THEME_COLORS } from "../constants/colors";
 
 // ✅ Register Unicode-safe font
 Font.register({
@@ -89,8 +91,20 @@ const styles = StyleSheet.create({
   pageBreak: {
     marginTop: 32,
     paddingTop: 20,
+  },
+  footer: {
+    position: "absolute",
+    bottom: 24,
+    left: 32,
+    right: 32,
+    flexDirection: "row",
+    justifyContent: "space-between",
     borderTop: "1px solid #E5E7EB",
-    pageBreakBefore: "always",
+    paddingTop: 8,
+  },
+  footerText: {
+    fontSize: 9,
+    color: "#6B7280",
   },
 });
 
@@ -108,9 +122,10 @@ export default function ReportDocument({ results }) {
     }))
     .filter(({ answeredQuestions }) => answeredQuestions.length > 0);
 
-  const answeredReasons = (reasons?.responses || []).filter(
-    (r) => r?.answer && r.answer !== "Not answered"
-  );
+  const answeredReasons = (reasons?.responses || []).filter((r) => {
+    const ans = (r?.answer || "").trim();
+    return ans === "Yes" || ans === "Somewhat";
+  });
   const hasTopThree = Array.isArray(reasons?.topThree) && reasons.topThree.length > 0;
 
   return (
@@ -121,47 +136,74 @@ export default function ReportDocument({ results }) {
         <Text style={styles.heading}>Mastering Money Report</Text>
 
         {/* ===== OVERALL SUMMARY ===== */}
-        <Text style={styles.text}>
-          <Text style={{ fontWeight: "bold" }}>Overall Score:</Text>{" "}
-          {overallPercent}%
+        <Text
+          style={{
+            fontSize: 14,
+            fontWeight: "bold",
+            textAlign: "center",
+            marginBottom: 4,
+          }}
+        >
+          Overall Score: {overallPercent}%
         </Text>
-        <Text style={styles.text}>
-          <Text style={{ fontWeight: "bold" }}>Rating:</Text> {ratingForReport}
+        <Text
+          style={{
+            fontSize: 14,
+            fontWeight: "bold",
+            textAlign: "center",
+            marginBottom: 10,
+          }}
+        >
+          Rating: {ratingForReport}
         </Text>
 
         {/* ===== THEME SUMMARY BAR CHART ===== */}
         <Text style={styles.sectionTitle}>Theme Summary</Text>
-        {themes.map((theme) => (
-          <View key={theme.themeId} style={styles.barRow}>
-            <Text style={styles.barLabel}>{theme.themeName}</Text>
-            <View style={styles.barTrack}>
-              <View
-                style={[
-                  styles.barFill,
-                  { width: `${Math.min(theme.percent, 100)}%` },
-                ]}
-              />
+        {themes.map((theme, index) => {
+          const barColor = THEME_COLORS[index % THEME_COLORS.length];
+          return (
+            <View key={theme.themeId} style={styles.barRow}>
+              <Text style={styles.barLabel}>{theme.themeName}</Text>
+              <View style={styles.barTrack}>
+                <View
+                  style={[
+                    styles.barFill,
+                    {
+                      width: `${Math.min(theme.percent, 100)}%`,
+                      backgroundColor: barColor,
+                    },
+                  ]}
+                />
+              </View>
+              <Text style={{ width: 30, textAlign: "right", fontSize: 10 }}>
+                {theme.percent}%
+              </Text>
             </View>
-            <Text style={{ width: 30, textAlign: "right", fontSize: 10 }}>
-              {theme.percent}%
-            </Text>
+          );
+        })}
+
+        {/* ===== TOP 3 REASONS ===== */}
+        {hasTopThree && (
+          <View style={{ marginTop: 24 }}>
+            <Text style={styles.sectionTitle}>Your Top Barriers</Text>
+            {reasons.topThree.map((r, i) => (
+              <Text key={r.id} style={styles.text}>
+                {i + 1}. {r.text} {/*({`#${i + 1}`})*/}
+              </Text>
+            ))}
           </View>
-        ))}
+        )}
 
         {/* ===== DETAILED BREAKDOWN ===== */}
         {!!themesWithAnswers.length && (
-          <View style={styles.pageBreak}>
+          <View style={styles.pageBreak} break>
             <Text style={styles.sectionTitle}>Detailed Breakdown</Text>
             {themesWithAnswers.map(({ theme, answeredQuestions }, idx) => (
-              <View key={theme.themeId} style={styles.themeBlock}>
-                <Text style={{ fontWeight: "bold", marginBottom: 4 }}>
-                  {theme.themeName} — {theme.percent}%
-                </Text>
-
+              <View key={theme.themeId} style={styles.themeBlock} wrap={false}>
                 {/* Column Headers */}
                 <View style={styles.questionHeader}>
                   <Text style={{ width: "70%", fontWeight: "bold" }}>
-                    Question
+                    {`${theme.themeName} = ${theme.percent}%`}
                   </Text>
                   <Text
                     style={{
@@ -175,14 +217,24 @@ export default function ReportDocument({ results }) {
                 </View>
 
                 {/* Questions & Answers (answered only) */}
-                {answeredQuestions.map((q) => (
-                  <View key={q.id} style={styles.questionRow}>
-                    <Text style={styles.questionText}>{q.text}</Text>
-                    <Text style={styles.answerText}>
-                      {q.selectedLabel} ({q.score})
-                    </Text>
-                  </View>
-                ))}
+                {answeredQuestions.map((q) => {
+                  const highlight =
+                    typeof q.score === "number" && Number(q.score) === 0;
+                  return (
+                    <View
+                      key={q.id}
+                      style={[
+                        styles.questionRow,
+                        highlight && { backgroundColor: "#FEE2E2" },
+                      ]}
+                    >
+                      <Text style={styles.questionText}>{q.text}</Text>
+                      <Text style={styles.answerText}>
+                        {q.selectedLabel} ({q.score})
+                      </Text>
+                    </View>
+                  );
+                })}
 
                 {/* Force page break every 3-4 themes for readability */}
                 {idx > 0 && idx % 3 === 0 && (
@@ -194,34 +246,45 @@ export default function ReportDocument({ results }) {
         )}
 
         {/* ===== REASONS SECTION ===== */}
-        {(answeredReasons.length > 0 || hasTopThree) && (
-          <View style={styles.pageBreak}>
-            <Text style={styles.sectionTitle}>What’s Holding You Back?</Text>
+        {answeredReasons.length > 0 && (
+          <View style={styles.pageBreak} break>
+            <Text style={styles.sectionTitle}>
+              What's holding you back from being better at money?
+            </Text>
 
             {/* All reasons with responses */}
-            {answeredReasons.map((r) => (
+            {answeredReasons.map((r) => {
+              const rankIndex = reasons?.topThree?.findIndex(
+                (top) => top.id === r.id
+              );
+              const rankSuffix = rankIndex > -1 ? ` (#${rankIndex + 1})` : "";
+              return (
                 <View key={r.id} style={styles.reasonRow}>
-                  <Text style={{ width: "70%" }}>{r.text}</Text>
+                  <Text style={{ width: "70%" }}>
+                    {r.text}
+                    {rankSuffix}
+                  </Text>
                   <Text style={{ width: "30%", textAlign: "right" }}>
                     {r.answer}
                   </Text>
                 </View>
-              ))}
-
-            {/* Top 3 ranked reasons */}
-            {hasTopThree && (
-              <>
-                <Text style={styles.sectionTitle}>Your Top 3 Barriers</Text>
-                {reasons.topThree.map((r, i) => (
-                  <Text key={r.id} style={styles.text}>
-                    {i + 1}. {r.text}
-                  </Text>
-                ))}
-              </>
-            )}
+              );
+            })}
           </View>
         )}
+        <View style={styles.footer} fixed>
+          <Text style={styles.footerText}>
+            {`Mastering Money Assessment ${VERSION_LABEL}`}
+          </Text>
+          <Text
+            style={styles.footerText}
+            render={({ pageNumber, totalPages }) =>
+              `Page ${pageNumber} of ${totalPages}`
+            }
+          />
+        </View>
       </Page>
     </Document>
   );
 }
+

@@ -82,10 +82,15 @@ export default function ReasonsPage({ onComplete }) {
     setRanking((prev) =>
       prev.map((entry) => (entry.id === id ? { ...entry, text } : entry))
     );
-  };
-
-  const handleCustomAnswer = (id, value) => {
-    recordResponse(id, value);
+    setResponses((prev) => {
+      const next = { ...prev };
+      if (text.trim()) {
+        next[id] = "Yes";
+      } else {
+        delete next[id];
+      }
+      return next;
+    });
   };
 
   const goToRanking = () => {
@@ -220,8 +225,7 @@ export default function ReasonsPage({ onComplete }) {
                 Add Your Own Reasons
               </h2>
               <p className="text-gray-600 mb-6 text-sm">
-                Add up to three personal barriers and let us know if they impact
-                you.
+                Add up to three personal barriers.
               </p>
 
               <div className="space-y-4">
@@ -232,7 +236,7 @@ export default function ReasonsPage({ onComplete }) {
                 )}
 
                 {customReasons.map((reason) => (
-                  <div key={reason.id} className="border rounded-xl p-4">
+                  <div key={reason.id} >
                     <input
                       type="text"
                       value={reason.text}
@@ -240,21 +244,6 @@ export default function ReasonsPage({ onComplete }) {
                       placeholder="Enter your own reason..."
                       className="w-full border-b border-gray-300 focus:border-indigo-500 px-2 py-2 outline-none text-sm"
                     />
-                    <div className="flex flex-wrap gap-3 mt-4">
-                      {REASON_OPTIONS.map((option) => (
-                        <button
-                          key={option}
-                          onClick={() => handleCustomAnswer(reason.id, option)}
-                          className={`flex-1 min-w-[120px] px-4 py-2 rounded-xl text-sm font-semibold ${
-                            responses[reason.id] === option
-                              ? "bg-indigo-600 text-white"
-                              : "bg-gray-100 hover:bg-gray-200"
-                          }`}
-                        >
-                          {option}
-                        </button>
-                      ))}
-                    </div>
                   </div>
                 ))}
               </div>
@@ -285,8 +274,7 @@ export default function ReasonsPage({ onComplete }) {
                 Choose and Rank Your Top 3 Barriers
               </h2>
               <p className="text-gray-600 mb-6 text-sm">
-                Select up to three reasons that most affect you, then click them
-                again to deselect.
+                Select up to three reasons that most affect you. You can click them again to deselect.
               </p>
 
               {(() => {

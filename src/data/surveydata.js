@@ -23,15 +23,16 @@ export const surveyData = [
       },
       {
         id: "1.1.2",
-        text: "Are you aligned with partner on your goals and strategy, or don't have a partner?",
+        text: "If you have a partner, are you both aligned your goals and strategy?",
         options: [
           { label: "Yes", value: 1, next: "1.1.3" },
           { label: "No", value: 0, next: "1.1.3" },
+          { label: "No Partner", value: 1, next: "1.1.3" },
         ],
       },
       {
         id: "1.1.3",
-        text: "Are you (and partner if you have one) clear on how the strategy will work?",
+        text: "Are you clear on how the strategy will work?",
         options: [
           { label: "Yes", value: 1, next: "1.1.4" },
           { label: "No", value: 0, next: "1.1.4" },
@@ -70,7 +71,7 @@ export const surveyData = [
       },
       {
         id: "2.1.1",
-        text: "Is your emergency fund in a separate online savings account (preferably a different bank to your normal bank)?",
+        text: "Is your emergency fund in a separate online savings account?",
         options: [
           { label: "Yes", value: 1, next: "2.1.2" },
           { label: "No", value: 0, next: "2.1.2" },
@@ -78,7 +79,7 @@ export const surveyData = [
       },
       {
         id: "2.1.2",
-        text: "Does your emergency fund have 3-6 months of living expenses (more if work/business is less secure)?",
+        text: "Does your emergency fund have 3 or more months of living expenses in it?",
         options: [
           { label: "Yes", value: 1, next: "2.2" },
           { label: "No", value: 0, next: "2.2" },
@@ -86,7 +87,7 @@ export const surveyData = [
       },
       {
         id: "2.2",
-        text: "Do you spend less than you earn and therefore saving towards longer term money goals?",
+        text: "Do you spend less than you earn and therefore able to save towards longer term money goals?",
         options: [
           { label: "Yes", value: 4, next: "3.1" },
           { label: "No", value: 0, next: "3.1" },
@@ -102,7 +103,7 @@ export const surveyData = [
     questions: [
       {
         id: "3.1",
-        text: "Do you have a budget or spending plan that clearly shows what you plan to spend you money on and keeps you on track to achieve your financial goals?",
+        text: "Do you have a budget or spending plan that clearly shows what you plan to spend you money on?",
         options: [
           { label: "Yes", value: 4, next: "3.1.1" },
           { label: "No", value: 0, next: "4.1" },
@@ -110,7 +111,7 @@ export const surveyData = [
       },
       {
         id: "3.1.1",
-        text: "Do you know how much it costs to run your life for a year (i.e. total yearly expenses)?",
+        text: "Do you know how much it costs to run your life for a year (i.e. your total yearly expenses)?",
         options: [
           { label: "Yes", value: 2, next: "3.1.2" },
           { label: "No", value: 0, next: "3.1.2" },
@@ -118,7 +119,7 @@ export const surveyData = [
       },
       {
         id: "3.1.2",
-        text: "Do you know how much you earn and how that is spent on necessities versus lifestyle versus savings?",
+        text: "Do you know how much you earn and how that is spent on needs versus wants, or saved?",
         options: [
           { label: "Yes", value: 2, next: "4.1" },
           { label: "No", value: 0, next: "4.1" },
@@ -159,7 +160,7 @@ export const surveyData = [
       },
       {
         id: "4.3.1",
-        text: "Do you have a separate savings account (or sub account) for each of your separate financial goals?",
+        text: "Do you have a separate savings accounts for each of your separate financial goals?",
         options: [
           { label: "Yes", value: 1, next: "4.3.2" },
           { label: "No", value: 0, next: "4.3.2" },
@@ -167,7 +168,7 @@ export const surveyData = [
       },
       {
         id: "4.3.2",
-        text: "Do you have separate accounts for needs/necessities versus lifestyle wants?",
+        text: "Do you have separate accounts for needs versus wants (e.g. bills versus lifestyle)?",
         options: [
           { label: "Yes", value: 1, next: "4.4" },
           { label: "No", value: 0, next: "4.4" },
@@ -179,7 +180,7 @@ export const surveyData = [
         options: [
           { label: "Yes", value: 1, next: "5.1" },
           { label: "No", value: 0, next: "5.1" },
-          { label: "N/A", value: 1, next: "5.1" },
+          { label: "No Business", value: 1, next: "5.1" },
         ],
       },
     ],
@@ -199,7 +200,7 @@ export const surveyData = [
       },
       {
         id: "5.1.1",
-        text: "Have you paid any interest on any of  your credit cards in the last two years?",
+        text: "Have you paid any interest on any of your credit cards in the last two years?",
         options: [
           { label: "Yes", value: 0, next: "5.1.2" },
           { label: "No", value: 1, next: "5.1.2" },
@@ -208,7 +209,7 @@ export const surveyData = [
       },
       {
         id: "5.1.2",
-        text: "Do you know the interest rate for any credit cards you have had over the last two years",
+        text: "Do you know the interest rate for any credit cards you have had over the last two years?",
         options: [
           { label: "Yes", value: 1, next: "5.2" },
           { label: "No", value: 0, next: "5.2" },
@@ -249,7 +250,7 @@ export const surveyData = [
       },
       {
         id: "5.4",
-        text: "In the last two years have you borrowed any money from Family or Friends",
+        text: "In the last two years have you borrowed any money from family or friends?",
         options: [
           { label: "Yes", value: 0, next: "6.1" },
           { label: "No", value: 2, next: "6.1" },
@@ -297,7 +298,7 @@ export const surveyData = [
       },
       {
         id: "7.2",
-        text: "Are you salary sacrificing 3% or more of your salary to your super account?",
+        text: "Are you salary sacrificing 3% or more of your salary to your superannuation account?",
         options: [
           { label: "Yes", value: 2, next: "7.3" },
           { label: "No", value: 0, next: "7.3" },
@@ -305,7 +306,7 @@ export const surveyData = [
       },
       {
         id: "7.3",
-        text: "Do you have more than one super account?",
+        text: "Do you have more than one superannuation account?",
         options: [
           { label: "Yes", value: 0, next: "7.4" },
           { label: "No", value: 2, next: "7.4" },
@@ -314,7 +315,7 @@ export const surveyData = [
       },
       {
         id: "7.4",
-        text: "Does your investments inside super match your risk profile and stage of life?",
+        text: "Do your investments inside your superannuation account match your risk profile and stage of life?",
         options: [
           { label: "Yes", value: 2, next: "8.1" },
           { label: "No", value: 0, next: "8.1" },
@@ -325,8 +326,8 @@ export const surveyData = [
   },
   {
     themeId: "8",
-    themeName: "Career-Business",
-    description: "You usually derive most of your income from your career or business. Is it doing its job well for you?",
+    themeName: "Career and Business",
+    description: "You usually derive most of your income from your career or your business. Is it doing its job well for you?",
     questions: [
       {
         id: "8.1",
@@ -359,7 +360,7 @@ export const surveyData = [
         options: [
           { label: "Yes", value: 2, next: "9.1" },
           { label: "No", value: 0, next: "9.1" },
-          { label: "N/A", value: 2, next: "9.1" },
+          { label: "No Business", value: 2, next: "9.1" },
         ],
       },
     ],
@@ -371,7 +372,7 @@ export const surveyData = [
     questions: [
       {
         id: "9.1",
-        text: "Do you, and your partner if you have one, have life insurance?",
+        text: "Do you (and your partner, if you have one) have life insurance?",
         options: [
           { label: "Yes", value: 2, next: "9.2" },
           { label: "No", value: 0, next: "9.2" },
@@ -379,7 +380,7 @@ export const surveyData = [
       },
       {
         id: "9.2",
-        text: "Do you, and your partner if you have one, have Total Permanent Disablement insurance?",
+        text: "Do you (and your partner, if you have one) have Total Permanent Disablement insurance?",
         options: [
           { label: "Yes", value: 2, next: "9.3" },
           { label: "No", value: 0, next: "9.3" },
@@ -387,7 +388,7 @@ export const surveyData = [
       },
       {
         id: "9.3",
-        text: "Do you, and your partner if you have one, have income protection insurance?",
+        text: "Do you (and your partner, if you have one) have income protection insurance?",
         options: [
           { label: "Yes", value: 2, next: "9.4" },
           { label: "No", value: 0, next: "9.4" },
@@ -399,6 +400,7 @@ export const surveyData = [
         options: [
           { label: "Yes", value: 2, next: "10.1" },
           { label: "No", value: 0, next: "10.1" },
+          { label: "Don't own house", value: 2, next: "10.1" },
         ],
       },
     ],
@@ -410,7 +412,7 @@ export const surveyData = [
     questions: [
       {
         id: "10.1",
-        text: "Do you, and your partner if you have one, have a properly prepared and signed will?",
+        text: "Do you (and your partner, if you have one) have a properly prepared and signed will?",
         options: [
           { label: "Yes", value: 4, next: "10.2" },
           { label: "No", value: 0, next: "10.2" },
@@ -418,7 +420,7 @@ export const surveyData = [
       },
       {
         id: "10.2",
-        text: "Do you, and your partner if you have one, have a properly signed medical and financial power of attorney?",
+        text: "Do you (and your partner, if you have one) have a properly signed medical and financial power of attorney?",
         options: [
           { label: "Yes", value: 4, next: "11.1" },
           { label: "No", value: 0, next: "11.1" },
@@ -433,7 +435,7 @@ export const surveyData = [
     questions: [
       {
         id: "11.1",
-        text: "Would you consider yourself to be financial literate, understanding interest, compound interest, investment risk?",
+        text: "Would you consider yourself to be financial literate, understanding things like interest, compound interest, investment risk?",
         options: [
           { label: "Yes", value: 2, next: "11.2" },
           { label: "No", value: 0, next: "11.2" },
@@ -449,7 +451,7 @@ export const surveyData = [
       },
       {
         id: "11.3",
-        text: "Do you continue to educate yourself about personal finances through (e.g. books, podcasts, news, courses)?",
+        text: "Do you continue to educate yourself about personal finances through things like books, podcasts, news, courses?",
         options: [
           { label: "Yes", value: 4, next: "12.1" },
           { label: "No", value: 0, next: "12.1" },
@@ -464,7 +466,7 @@ export const surveyData = [
     questions: [
       {
         id: "12.1",
-        text: "Do you use different passwords on all sites (preferably using a password manager)?",
+        text: "Do you use different passwords on all web sites (preferably using a password manager)?",
         options: [
           { label: "Yes", value: 2, next: "12.2" },
           { label: "No", value: 0, next: "12.2" },

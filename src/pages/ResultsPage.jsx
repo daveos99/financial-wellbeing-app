@@ -1,5 +1,5 @@
 // src/pages/ResultsPage.jsx
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   BarChart,
   Bar,
@@ -10,8 +10,9 @@ import {
   Cell,
 } from "recharts";
 import SurveyButton from "../components/Button";
-import { PDFDownloadLink } from "@react-pdf/renderer";
+import { usePDF } from "@react-pdf/renderer";
 import ReportDocument from "../components/ReportDocument";
+import { THEME_COLORS } from "../constants/colors";
 
 // Helper: Convert overall score to rating label
 function getRatingForReport(overallPercent) {
@@ -40,6 +41,38 @@ export default function ResultsPage({ results, onRestart }) {
   const overall = results?.overallPercent ?? 0;
   const rating = getRating(overall);
   const ratingForReport = getRatingForReport(overall);
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
+  const [pdfError, setPdfError] = useState(null);
+  const [pdfInstance, updatePdfInstance] = usePDF({ document: null });
+  const { url, loading, error } = pdfInstance ?? {};
+
+  useEffect(() => {
+    if (!isGeneratingPdf) return;
+    if (loading) return;
+    if (error) {
+      setPdfError("Could not generate the PDF. Please try again.");
+      setIsGeneratingPdf(false);
+      return;
+    }
+    if (url) {
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = "MasteringMoneyReport.pdf";
+      document.body.appendChild(anchor);
+      anchor.click();
+      document.body.removeChild(anchor);
+      setIsGeneratingPdf(false);
+    }
+  }, [isGeneratingPdf, loading, error, url]);
+
+  const handleDownloadPdf = () => {
+    if (!results || isGeneratingPdf) return;
+    setPdfError(null);
+    setIsGeneratingPdf(true);
+    updatePdfInstance(
+      <ReportDocument results={{ ...results, ratingForReport }} />
+    );
+  };
 
   if (!themes || themes.length === 0) {
     return (
@@ -58,11 +91,7 @@ export default function ResultsPage({ results, onRestart }) {
   }
 
   // 🎨 Color palette for bar chart
-  const colors = [
-    "#6366F1", "#10B981", "#F59E0B", "#EF4444",
-    "#3B82F6", "#8B5CF6", "#14B8A6", "#F97316",
-    "#EC4899", "#84CC16", "#06B6D4", "#A855F7",
-  ];
+  const colors = THEME_COLORS;
 
   // 📊 Prepare chart data
   const chartData = themes.map((t, i) => ({
@@ -76,6 +105,14 @@ export default function ResultsPage({ results, onRestart }) {
       <h2 className="text-3xl font-bold mb-6 text-indigo-600">
         Your Mastering Money Results
       </h2>
+
+      {/* 💯 Overall Score */}
+      <div className="mb-8">
+        <p className="text-4xl font-extrabold text-indigo-700">
+          Overall Score: {overall}%
+        </p>
+        <p className="text-2xl font-semibold mt-2 text-gray-800">{rating}</p>
+      </div>
 
       {/* 📊 Horizontal Bar Chart */}
       {chartData.length > 0 && (
@@ -110,28 +147,22 @@ export default function ResultsPage({ results, onRestart }) {
         </div>
       )}
 
-      {/* 💯 Overall Score */}
-      <div className="mb-8">
-        <p className="text-4xl font-extrabold text-indigo-700">
-          Overall Score: {overall}%
-        </p>
-        <p className="text-2xl font-semibold mt-2 text-gray-800">{rating}</p>
-      </div>
-
       {/* 📄 Download PDF Report */}
       <div className="mt-8">
-        <PDFDownloadLink
-          document={<ReportDocument results={{ ...results, ratingForReport }} />}
-          fileName="MasteringMoneyReport.pdf"
+        <button
+          onClick={handleDownloadPdf}
+          disabled={!results || isGeneratingPdf}
+          className={`bg-linear-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-xl font-semibold transition ${
+            (!results || isGeneratingPdf)
+              ? "opacity-60 cursor-not-allowed"
+              : "hover:from-indigo-700 hover:to-purple-700"
+          }`}
         >
-          {({ loading }) => (
-            <button
-              className="bg-linear-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition"
-            >
-              {loading ? "Generating Report..." : "Download PDF Report"}
-            </button>
-          )}
-        </PDFDownloadLink>
+          {isGeneratingPdf ? "Generating Report..." : "Download PDF Report"}
+        </button>
+        {pdfError && (
+          <p className="mt-3 text-sm text-red-600">{pdfError}</p>
+        )}
       </div>
 
       {/* 🔁 Restart Survey */}
@@ -141,4 +172,5 @@ export default function ResultsPage({ results, onRestart }) {
     </div>
   );
 }
+
 
