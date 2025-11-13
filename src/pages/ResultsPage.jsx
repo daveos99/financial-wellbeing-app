@@ -164,6 +164,16 @@ export default function ResultsPage({ results, onRestart }) {
           <p className="mt-3 text-sm text-red-600">{pdfError}</p>
         )}
       </div>
+      <div className="mt-6">
+        <a
+          href="https://calendar.app.google/ZduxYZefWuWEY3F3A"
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex items-center justify-center bg-emerald-500 text-white px-6 py-3 rounded-xl font-semibold shadow hover:bg-emerald-600 transition"
+        >
+          Book a chat with a Money Coach
+        </a>
+      </div>
 
       {/* 🔁 Restart Survey */}
       <SurveyButton onClick={onRestart} className="mt-10">
@@ -172,5 +182,7 @@ export default function ResultsPage({ results, onRestart }) {
     </div>
   );
 }
+
+
 
 

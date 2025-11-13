@@ -7,6 +7,7 @@ import {
   View,
   StyleSheet,
   Font,
+  Link,
 } from "@react-pdf/renderer";
 import DejaVuSans from "../assets/fonts/DejaVuSans.ttf";
 import { VERSION_LABEL } from "../config/version";
@@ -106,6 +107,20 @@ const styles = StyleSheet.create({
     fontSize: 9,
     color: "#6B7280",
   },
+  ctaLink: {
+    marginTop: 12,
+    fontSize: 12,
+    color: "#047857",
+    textDecoration: "none",
+    borderWidth: 1,
+    borderColor: "#10B981",
+    borderRadius: 4,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    textAlign: "center",
+    fontWeight: 700,
+    backgroundColor: "#ECFDF5",
+  },
 });
 
 export default function ReportDocument({ results }) {
@@ -191,6 +206,12 @@ export default function ReportDocument({ results }) {
                 {i + 1}. {r.text} {/*({`#${i + 1}`})*/}
               </Text>
             ))}
+            <Link
+              src="https://calendar.app.google/ZduxYZefWuWEY3F3A"
+              style={styles.ctaLink}
+            >
+              Book a chat with a Money Coach
+            </Link>
           </View>
         )}
 
