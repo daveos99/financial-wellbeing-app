@@ -224,15 +224,12 @@ export default function ReasonsPage({ onComplete }) {
                 Add Your Own Reasons
               </h2>
               <p className="text-gray-600 mb-6 text-sm">
-                Add up to three personal barriers. Leave any field blank if you do not have an additional reason.
+                Add up to three other reasons that are stopping you get better at money. 
               </p>
 
               <div className="space-y-4">
                 {customReasons.map((reason, index) => (
                   <div key={reason.id}>
-                    <label className="block text-xs font-semibold text-gray-500 mb-1">
-                      Custom Reason {index + 1}
-                    </label>
                     <input
                       type="text"
                       value={reason.text}

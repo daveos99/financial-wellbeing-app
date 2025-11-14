@@ -331,11 +331,11 @@ export const surveyData = [
     questions: [
       {
         id: "8.1",
-        text: "Do you have good career prospects?",
+        text: "Do you have good career prospects, or are you retired?",
         options: [
           { label: "Yes", value: 2, next: "8.2" },
           { label: "No", value: 0, next: "8.2" },
-          { label: "Unsure", value: 0, next: "8.2" },
+          { label: "Retired", value: 8, next: "9.1" },
         ],
       },
       {
